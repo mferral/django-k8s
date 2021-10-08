@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: django-container
+  template:
+    metadata:
+      labels:
+        app: django-container
+        tier: backend
+    spec:
+      containers:      
+        - name: django-container
+          image: mferral/django-api:lastest
+          imagePullPolicy: Always
+          # command: ['python', 'manage.py', 'makemigrations']
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: kubernetes_django
+            - name: POSTGRES_HOST
+              value: postgres
+          ports:
+            - containerPort: 8000
